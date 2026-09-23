@@ -185,7 +185,5 @@ Executed automated JSON-RPC stdio protocol test:
    git branch -M main
    git push -u origin main
    ```
-2. **Publish on LinkedIn**:
-   Open [`docs/07-linkedin-article.md`](./07-linkedin-article.md), add your name and GitHub repo link, and publish with screenshots attached.
-3. **Present Internally**:
+2. **Present Internally**:
    Share with practice leads and architects as the enterprise-grade reference pattern for Agentic AI on SAP BTP.

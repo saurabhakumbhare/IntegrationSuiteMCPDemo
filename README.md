@@ -62,29 +62,29 @@ Both capabilities run within SAP Integration Suite, but they solve fundamentally
 ```mermaid
 flowchart LR
     subgraph Client["AI Client Layer"]
-        A[Claude Desktop / Cursor / Custom Agent]
+        A["Claude Desktop / Cursor / Custom Agent"]
     end
 
     subgraph IS["SAP Integration Suite (BTP)"]
         subgraph Gateway["MCP Gateway (Integration Cell Runtime)"]
-            B[MCP Sender Adapter<br/>/mcp/sse or stdio]
-            C[Policy Engine<br/>OAuth 2.0 & Rate Limiting]
+            B["MCP Sender Adapter<br/>/mcp/sse or stdio"]
+            C["Policy Engine<br/>OAuth 2.0 & Rate Limiting"]
         end
         subgraph Package["Integration Package: MCP Demo - Sales Operations"]
-            D[API Artifact: 'Sales-Operations-API'<br/>Base Path: /sales-ops]
+            D["API Artifact: Sales-Operations-API<br/>Base Path: /sales-ops"]
         end
     end
 
     subgraph Backend["Enterprise Backend Layer"]
-        E[(SAP S/4HANA Cloud / OP)]
-        F[(Mock Sandbox / Local Engine)]
+        E[("SAP S/4HANA Cloud / OP")]
+        F[("Mock Sandbox / Local Engine")]
     end
 
-    A -->|1. JSON-RPC (tools/call)| B
+    A -->|"1. JSON-RPC (tools/call)"| B
     B --> C
     C --> D
-    D -->|2. Principal Propagation / OData| E
-    D -.->|Fallback / Demo Sandbox| F
+    D -->|"2. Principal Propagation / OData"| E
+    D -.->|"Fallback / Demo Sandbox"| F
 ```
 
 ---
@@ -228,22 +228,9 @@ git push origin main
 ```
 Repo URL: [https://github.com/saurabhakumbhare/IntegrationSuiteMCPDemo](https://github.com/saurabhakumbhare/IntegrationSuiteMCPDemo)
 
-### Step 2: Publish Your Viral LinkedIn Thought Leadership Post
-1. Open [`docs/07-linkedin-article.md`](./docs/07-linkedin-article.md).
-2. Insert your GitHub repository link: `https://github.com/saurabhakumbhare/IntegrationSuiteMCPDemo`.
-3. Post it on LinkedIn during peak professional hours (Tuesday–Thursday, 08:00–10:00 local time).
-4. Attach `images/01-claude-tool-call.png` or `images/03-claude-simulation-tool.png` as visual proof!
-
-### Step 3: Present Internally as a Reusable Reference Architecture
+### Step 2: Present Internally as a Reusable Reference Architecture
 * Use this repository to demo **Agentic AI on SAP BTP** to your integration practice leads, solution architects, and client executives.
 * Position this as the standardized framework for how your organization connects Generative AI agents to SAP backends safely.
-
----
-
-## 📢 LinkedIn Promotional Blog Post
-
-To publish and promote this POC to executive stakeholders and enterprise architects on LinkedIn, use the pre-formatted thought leadership article located in:
-👉 [`docs/07-linkedin-article.md`](./docs/07-linkedin-article.md)
 
 ---
 
@@ -257,8 +244,7 @@ To publish and promote this POC to executive stakeholders and enterprise archite
 │   ├── test_client.py                 # Automated protocol verification test script
 │   └── claude_desktop_config.json     # Configuration snippet for Claude Desktop
 ├── docs/
-│   ├── step-by-step-guide.md          # Comprehensive setup guide with embedded screenshots
-│   └── 07-linkedin-article.md         # High-converting viral LinkedIn blog post
+│   └── step-by-step-guide.md          # Comprehensive setup guide with embedded screenshots
 └── images/                            # Architecture and walkthrough screenshots
 ```
 
