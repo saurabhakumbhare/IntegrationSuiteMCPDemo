@@ -58,7 +58,8 @@ Verified via BTP Cockpit (`Security → Users` for `<your-developer-user>`):
 ## Step 2.2 — Add API Wizard (Integration Cell Runtime)
 - **Step 1 (Runtime Profile):** Switched from default `Cloud Integration` to **`Integration Cell`**.
 - **Step 2 (Select a Method):** Selected **`URL or Specification`**.
-  *(Screenshot: `images/step2_select_method.png`)*
+
+![Step 2: Select a Method on Integration Cell](../images/step2_select_method.png)
 
 ## Step 2.3 — Upload Specification & Configure API Details
 - **Mode:** `Upload`
@@ -70,7 +71,8 @@ Verified via BTP Cockpit (`Security → Users` for `<your-developer-user>`):
 - **API Base Path:** `/sales-ops`
 - **State:** `Active` | **Version:** `1.0.0`
 - **Virtual Host:** `<integration-cell-virtual-host>.integration.cloud.sap`
-  *(Screenshot: `images/step3_filled_form.png`)*
+
+![Step 3: Provide API Details and Upload OpenAPI Spec](../images/step3_filled_form.png)
 
 ## Step 2.4 — API Designer Validation
 - Successfully loaded with Swagger UI.
@@ -79,7 +81,8 @@ Verified via BTP Cockpit (`Security → Users` for `<your-developer-user>`):
   2. `GET /orders/{salesOrderId}` (`getSalesOrderDetails`)
   3. `POST /orders/{salesOrderId}/simulate-block-release` (`simulateBlockRelease`)
   4. `GET /stock/check` (`checkMaterialStock`)
-  *(Screenshot: `images/api_designer_overview.png`)*
+
+![Step 2.4: API Designer Overview with Swagger UI](../images/api_designer_overview.png)
 
 ---
 
@@ -88,12 +91,14 @@ Verified via BTP Cockpit (`Security → Users` for `<your-developer-user>`):
 ## Step 3.1 — API Details & Tool Resources
 - Inspected Overview, Target EndPoint, Resources, and Policies tabs.
 - Policy editor available for Traffic Management (Spike Arrest / Quota) and Security.
-  *(Screenshots: `images/api_details_overview.png`, `images/api_details_resources.png`)*
+
+![Step 3.1: API Details and Resources](../images/api_details_resources.png)
 
 ## Step 3.2 — Runtime Deployment
 - Targeted to **Integration Cell** runtime.
 - Clicked `[More] → [Deploy]`.
-  *(Screenshot: `images/api_deployment_status.png`)*
+
+![Step 3.2: Runtime Deployment Status](../images/api_deployment_status.png)
 
 ---
 
@@ -135,13 +140,16 @@ Executed automated JSON-RPC stdio protocol test:
   // Call 2
   {"tool": "getSalesOrderDetails", "input": {"salesOrderId": "50000123"}}
   ```
+
+![Test Scenario 1: Claude Emitting MCP Tool Calls](../images/01-claude-tool-call.png)
+
 - **Executive Findings Returned:**
   - Order `#50000123` on Credit Block `01` (`104.5%` exposure).
   - Value: `€45,200.50`.
   - Inventory: 50/50 units of `MAT-1002` confirmed in stock.
   - Identification: Finance hold, not a warehouse availability issue.
-  - **Privacy Compliance:** Left sidebar completely collapsed; zero personal chat history exposed.
-  *(Screenshots: `images/01-claude-tool-call.png`, `images/02-claude-executive-table.png`)*
+
+![Test Scenario 1: Executive Findings and Recommendation](../images/02-claude-executive-table.png)
 
 ### Test Scenario 2: Action Simulation (`simulateBlockRelease`)
 - **Prompt:** *"Treasury has confirmed that the customer wired €25,000 this morning. Simulate releasing delivery block 01 on order 50000123 with this justification. What is the simulated credit exposure, risk score, and recommended next step?"*
@@ -161,7 +169,8 @@ Executed automated JSON-RPC stdio protocol test:
   - Risk Score: `LOW`
   - Recalculated Credit Exposure: **`82.6%`** (comfortably under the 100% threshold).
   - Recommended Next Step: Proceed with formal release request attaching treasury wire confirmation.
-  *(Screenshot: `images/03-claude-simulation-tool.png`)*
+
+![Test Scenario 2: Simulation Action and Recalculated Exposure](../images/03-claude-simulation-tool.png)
 
 ---
 
@@ -172,11 +181,11 @@ Executed automated JSON-RPC stdio protocol test:
    git init
    git add .
    git commit -m "feat: complete SAP Integration Suite MCP Gateway POC and guide"
-   git remote add origin https://github.com/<your-username>/sap-integration-suite-mcp-demo.git
+   git remote add origin https://github.com/saurabhakumbhare/IntegrationSuiteMCPDemo.git
    git branch -M main
    git push -u origin main
    ```
 2. **Publish on LinkedIn**:
-   Open [`docs/07-linkedin-article.md`](./docs/07-linkedin-article.md), add your name and GitHub repo link, and publish with screenshots attached.
+   Open [`docs/07-linkedin-article.md`](./07-linkedin-article.md), add your name and GitHub repo link, and publish with screenshots attached.
 3. **Present Internally**:
    Share with practice leads and architects as the enterprise-grade reference pattern for Agentic AI on SAP BTP.

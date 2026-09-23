@@ -89,6 +89,30 @@ flowchart LR
 
 ---
 
+## 📸 Visual Walkthrough & Claude AI Test Results
+
+### 1. Claude AI Emitting Governed MCP Tool Calls
+Claude interprets the OpenAPI 3.0 specification from Integration Suite and executes the exact 2-step tool sequence (`getOpenSalesOrders` + `getSalesOrderDetails`):
+
+![Claude AI MCP Tool Call](images/01-claude-tool-call.png)
+
+### 2. Claude AI Executive Breakdown & Root-Cause Diagnostics
+Structured business response showing order status, line items, and delivery block analysis:
+
+![Claude AI Executive Table](images/02-claude-executive-table.png)
+
+### 3. Claude AI Action Simulation (`simulateBlockRelease`)
+Safe, governed simulation calculating recalculated credit exposure (`82.6%`) before taking any action:
+
+![Claude AI Action Simulation](images/03-claude-simulation-tool.png)
+
+### 4. SAP Integration Suite API Designer
+The curated business tools exposed on the **Integration Cell** runtime:
+
+![SAP Integration Suite API Designer](images/api_designer_overview.png)
+
+---
+
 ## 🛠️ Step-by-Step Implementation Guide
 
 ### Phase 0: Prerequisites & Tenant Readiness
@@ -197,33 +221,22 @@ Restart Claude Desktop, and prompt:
 
 To turn this POC into personal brand authority, client value, and commercial opportunities:
 
-### Step 1: Initialize & Publish Your GitHub Repository
-1. Open PowerShell / Terminal in this project folder:
-   ```bash
-   git init
-   git add .
-   git commit -m "feat: complete SAP Integration Suite MCP Gateway POC and guide"
-   ```
-2. Create a new public repository on GitHub (e.g. `sap-integration-suite-mcp-demo`) and push:
-   ```bash
-   git remote add origin https://github.com/<your-username>/sap-integration-suite-mcp-demo.git
-   git branch -M main
-   git push -u origin main
-   ```
+### Step 1: Push to Your GitHub Repository
+Your repository is connected and ready:
+```bash
+git push origin main
+```
+Repo URL: [https://github.com/saurabhakumbhare/IntegrationSuiteMCPDemo](https://github.com/saurabhakumbhare/IntegrationSuiteMCPDemo)
 
 ### Step 2: Publish Your Viral LinkedIn Thought Leadership Post
 1. Open [`docs/07-linkedin-article.md`](./docs/07-linkedin-article.md).
-2. Replace `[Author Name]` with your name and paste your GitHub repository link.
+2. Insert your GitHub repository link: `https://github.com/saurabhakumbhare/IntegrationSuiteMCPDemo`.
 3. Post it on LinkedIn during peak professional hours (Tuesday–Thursday, 08:00–10:00 local time).
-4. Attach the screenshot `images/01-claude-tool-call.png` or `images/03-claude-simulation-tool.png` as visual proof!
+4. Attach `images/01-claude-tool-call.png` or `images/03-claude-simulation-tool.png` as visual proof!
 
 ### Step 3: Present Internally as a Reusable Reference Architecture
 * Use this repository to demo **Agentic AI on SAP BTP** to your integration practice leads, solution architects, and client executives.
 * Position this as the standardized framework for how your organization connects Generative AI agents to SAP backends safely.
-
-### Step 4: Expand with Advanced Enterprise Scenarios
-* **Scenario 2 (Incident-to-Order)**: Connect ServiceNow via Open Connectors.
-* **Scenario 3 (AIOps)**: Build a DevOps MCP server that monitors Integration Suite Message Processing Logs (MPL) to auto-retry failed messages.
 
 ---
 
@@ -237,14 +250,14 @@ To publish and promote this POC to executive stakeholders and enterprise archite
 ## 📁 Repository Structure
 
 ```
-├── README.md                          # Master project documentation
+├── README.md                          # Master project documentation with embedded screenshots
 ├── sales-operations-api.yaml          # Curated OpenAPI 3.0 specification for SAP tools
 ├── client-configs/
 │   ├── mcp_server.py                  # Production MCP Server implementation (stdio/JSON-RPC)
 │   ├── test_client.py                 # Automated protocol verification test script
 │   └── claude_desktop_config.json     # Configuration snippet for Claude Desktop
 ├── docs/
-│   ├── step-by-step-guide.md          # Comprehensive setup guide
+│   ├── step-by-step-guide.md          # Comprehensive setup guide with embedded screenshots
 │   └── 07-linkedin-article.md         # High-converting viral LinkedIn blog post
 └── images/                            # Architecture and walkthrough screenshots
 ```
