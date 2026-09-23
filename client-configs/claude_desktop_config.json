@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "sap-integration-suite": {
+      "command": "python",
+      "args": [
+        "<PATH_TO_REPO>/client-configs/mcp_server.py"
+      ],
+      "env": {
+        "SAP_IS_ENDPOINT": "https://<your-integration-cell-host>/sales-ops",
+        "SAP_IS_API_KEY": ""
+      }
+    }
+  }
+}

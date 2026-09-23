@@ -1,0 +1,277 @@
+openapi: 3.0.3
+info:
+  title: Sales Operations and Delivery Block Clearance API
+  description: >
+    Curated business interface exposed through SAP Integration Suite.
+    Encapsulates S/4HANA Sales Order and Stock Availability operations into 
+    semantic tools designed for AI agent consumption via Model Context Protocol (MCP).
+  version: 1.0.0
+servers:
+  - url: /sales-ops
+    description: Integration Cell Runtime Endpoint
+paths:
+  /orders:
+    get:
+      summary: Query Open Sales Orders by Customer or Status
+      description: >
+        Retrieves a list of open sales orders. Use this tool when a user asks 
+        for pending, delayed, or active orders for a customer account.
+      operationId: getOpenSalesOrders
+      parameters:
+        - name: customerId
+          in: query
+          required: true
+          description: The 10-digit SAP Customer / Sold-to Party ID (e.g., "10000001").
+          schema:
+            type: string
+            example: "10000001"
+        - name: orderStatus
+          in: query
+          required: false
+          description: Status filter. Allowed values are 'ALL', 'BLOCKED', 'OPEN', 'PENDING_DELIVERY'.
+          schema:
+            type: string
+            enum: [ALL, BLOCKED, OPEN, PENDING_DELIVERY]
+            default: ALL
+      responses:
+        '200':
+          description: List of filtered sales orders matching criteria.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SalesOrderSummary'
+
+  /orders/{salesOrderId}:
+    get:
+      summary: Inspect Sales Order Details and Delivery Block
+      description: >
+        Fetches detailed header, line item, delivery status, and active delivery 
+        block reasons for a specific sales order. Use this to diagnose why an order cannot be shipped.
+      operationId: getSalesOrderDetails
+      parameters:
+        - name: salesOrderId
+          in: path
+          required: true
+          description: The SAP Sales Order Document Number (e.g., "50000123").
+          schema:
+            type: string
+            example: "50000123"
+      responses:
+        '200':
+          description: Detailed order state including line items and block diagnostics.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesOrderDetail'
+        '404':
+          description: Sales order not found in SAP backend.
+
+  /orders/{salesOrderId}/simulate-block-release:
+    post:
+      summary: Simulate Delivery Block Clearance
+      description: >
+        Performs a pre-check and simulation to determine whether releasing a delivery 
+        block (e.g. Credit Block '01' or Export Control Block '05') will succeed without 
+        persisting changes. Checks credit limit exposure and inventory allocations.
+      operationId: simulateBlockRelease
+      parameters:
+        - name: salesOrderId
+          in: path
+          required: true
+          description: The Sales Order number to simulate clearance for.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - blockReasonCode
+                - justification
+              properties:
+                blockReasonCode:
+                  type: string
+                  description: The SAP Block Code to clear (e.g. '01' for Credit Limit, '02' for Political Risk).
+                  example: "01"
+                justification:
+                  type: string
+                  description: Business justification entered by the user for audit logging.
+                  example: "Customer wire transfer confirmed by treasury."
+      responses:
+        '200':
+          description: Simulation results and approval risk assessment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulationResult'
+
+  /stock/check:
+    get:
+      summary: Check Material Stock Availability Across Plants
+      description: >
+        Checks unrestricted stock quantity for a material across distribution centers.
+        Use this tool when evaluating order fulfillment feasibility.
+      operationId: checkMaterialStock
+      parameters:
+        - name: materialNumber
+          in: query
+          required: true
+          description: Material / Product Number (e.g., "MAT-1002").
+          schema:
+            type: string
+            example: "MAT-1002"
+        - name: plant
+          in: query
+          required: false
+          description: Specific 4-character SAP Plant Code (e.g., "1010").
+          schema:
+            type: string
+            example: "1010"
+      responses:
+        '200':
+          description: Current stock availability by plant.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StockItem'
+
+components:
+  schemas:
+    SalesOrderSummary:
+      type: object
+      properties:
+        salesOrderId:
+          type: string
+          example: "50000123"
+        customerId:
+          type: string
+          example: "10000001"
+        customerName:
+          type: string
+          example: "Acme Retail Global Ltd"
+        orderDate:
+          type: string
+          format: date
+          example: "2026-09-15"
+        netAmount:
+          type: number
+          format: float
+          example: 45200.50
+        currency:
+          type: string
+          example: "EUR"
+        deliveryBlockStatus:
+          type: string
+          enum: [NONE, BLOCKED]
+          example: "BLOCKED"
+        overallStatus:
+          type: string
+          example: "In Processing"
+
+    SalesOrderDetail:
+      type: object
+      properties:
+        salesOrderId:
+          type: string
+          example: "50000123"
+        customerId:
+          type: string
+          example: "10000001"
+        customerName:
+          type: string
+          example: "Acme Retail Global Ltd"
+        deliveryBlockCode:
+          type: string
+          example: "01"
+        deliveryBlockDescription:
+          type: string
+          example: "Credit Limit Exceeded"
+        creditExposurePercent:
+          type: number
+          example: 104.5
+        totalOrderValue:
+          type: number
+          example: 45200.50
+        currency:
+          type: string
+          example: "EUR"
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              itemNumber:
+                type: string
+                example: "10"
+              materialNumber:
+                type: string
+                example: "MAT-1002"
+              description:
+                type: string
+                example: "Industrial Sensor Hub X1"
+              orderQuantity:
+                type: integer
+                example: 50
+              confirmedQuantity:
+                type: integer
+                example: 50
+              unitPrice:
+                type: number
+                example: 904.01
+
+    SimulationResult:
+      type: object
+      properties:
+        salesOrderId:
+          type: string
+          example: "50000123"
+        simulationStatus:
+          type: string
+          enum: [ELIGIBLE_FOR_RELEASE, BLOCKED_HIGH_RISK, INSUFFICIENT_INVENTORY]
+          example: "ELIGIBLE_FOR_RELEASE"
+        canAutoRelease:
+          type: boolean
+          example: true
+        riskScore:
+          type: string
+          enum: [LOW, MEDIUM, HIGH]
+          example: "LOW"
+        diagnostics:
+          type: array
+          items:
+            type: string
+          example:
+            - "Credit exposure recalculated at 92.4% following pending payment allocation."
+            - "Inventory confirmed in Plant 1010 for all line items."
+            - "Customer payment history rated Tier 1."
+        recommendedNextStep:
+          type: string
+          example: "Submit formal release request via Integration Suite approval workflow or authorized agent."
+
+    StockItem:
+      type: object
+      properties:
+        materialNumber:
+          type: string
+          example: "MAT-1002"
+        plant:
+          type: string
+          example: "1010"
+        plantName:
+          type: string
+          example: "Frankfurt Logistics Hub"
+        unrestrictedStock:
+          type: integer
+          example: 320
+        reservedStock:
+          type: integer
+          example: 45
+        availableToPromise:
+          type: integer
+          example: 275
